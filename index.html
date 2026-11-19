@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yassine — Portfolio Systèmes & Réseaux</title>
+<meta name="description" content="Portfolio de Yassine, technicien systèmes et réseaux : infrastructure virtualisée Proxmox, VLAN, Active Directory, GLPI, Zabbix, automatisation PowerShell, CCNA en cours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: calm left-aligned reading column, one topology diagram as the centerpiece, soft cards. */
+:root{
+  --bg:#f4f6f8;
+  --surface:#ffffff;
+  --ink:#14202e;
+  --muted:#5a6676;
+  --line:#dde3ea;
+  --accent:#0b6e7a;
+  --accent-soft:#e3f1f2;
+  --signal:#c4561c;
+  --ok:#1d7a44;
+  --font-display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e151e; --surface:#151f2b; --ink:#e6edf4; --muted:#97a4b4; --line:#26354a;
+    --accent:#45b9c4; --accent-soft:#143440; --signal:#f0884d; --ok:#4cc27e;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e151e; --surface:#151f2b; --ink:#e6edf4; --muted:#97a4b4; --line:#26354a;
+  --accent:#45b9c4; --accent-soft:#143440; --signal:#f0884d; --ok:#4cc27e;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16.5px;line-height:1.65}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.2;text-wrap:balance;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.mono{font-family:var(--font-mono);font-size:.94em}
+.label{font-size:14px;font-weight:600;color:var(--muted);margin:0 0 6px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:58px}
+nav .brand{font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
+nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0}
+nav ul a{color:var(--muted);text-decoration:none;font-size:15px}
+nav ul a:hover{color:var(--ink)}
+@media (max-width:720px){nav ul{display:none}}
+
+/* hero */
+header.hero{padding:64px 0 44px}
+.hero h1{font-size:clamp(36px,5.6vw,58px);font-weight:800;letter-spacing:-.015em}
+.hero h1 span{display:block;color:var(--accent);font-weight:700}
+.hero p.lede{font-size:19px;color:var(--muted);max-width:62ch;margin:20px 0 0}
+.btn{display:inline-flex;align-items:center;gap:8px;margin-top:28px;padding:12px 20px;border-radius:10px;font-weight:600;font-size:15px;text-decoration:none;background:var(--accent);color:var(--bg)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);margin-top:44px;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.fact{padding:18px 20px;border-right:1px solid var(--line)}
+.fact:last-child{border-right:0}
+.fact b{display:block;font-family:var(--font-display);font-size:23px;font-weight:700}
+.fact span{font-size:14px;color:var(--muted)}
+@media (max-width:760px){.facts{grid-template-columns:1fr 1fr}.fact:nth-child(2){border-right:0}.fact:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* sections */
+section{padding:56px 0;border-top:1px solid var(--line)}
+.sec-head{margin-bottom:28px}
+.sec-head h2{font-size:clamp(26px,3.4vw,34px);font-weight:700}
+.sec-head p{margin:10px 0 0;color:var(--muted);max-width:65ch}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+
+/* main project */
+.project-top{display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
+@media (max-width:880px){.project-top{grid-template-columns:1fr}}
+.project-top h3{font-size:23px;margin:0 0 12px}
+.project-top p{margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font-size:13.5px;padding:4px 11px;border-radius:999px;background:var(--accent-soft);color:var(--ink)}
+.topo{overflow-x:auto;margin:0}
+.topo svg{display:block;width:100%;min-width:460px;height:auto;margin-top:8px}
+.topo text{font-family:var(--font-body);fill:var(--ink)}
+.topo .sub{fill:var(--muted)}
+.topo .box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.topo .box.hl{stroke:var(--accent)}
+.topo .wire{stroke:var(--muted);stroke-width:2;fill:none}
+.topo .wire.v106{stroke:var(--accent)}
+.topo .wire.v11{stroke:var(--signal)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:13.5px;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+@media (max-width:880px){.grid3{grid-template-columns:1fr}}
+.grid3 h4{font-size:17px;margin:0 0 10px}
+.grid3 ul{margin:0;padding-left:18px}
+.grid3 li{margin-bottom:6px}
+
+.table-wrap{overflow-x:auto;margin-top:20px;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+caption{text-align:left;padding:16px 16px 4px;font-weight:600;color:var(--muted);font-size:14px}
+th,td{text-align:left;padding:11px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td.mono{font-variant-numeric:tabular-nums}
+.vl{display:inline-block;font-size:12.5px;font-weight:600;padding:1px 9px;border-radius:999px;color:#fff}
+.vl.a{background:var(--accent)} .vl.b{background:var(--signal)}
+:root[data-theme="dark"] .vl{color:#0e151e}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .vl{color:#0e151e}}
+
+.fixes{margin-top:16px}
+.fix{display:grid;grid-template-columns:200px 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.fix:last-child{border-bottom:0;padding-bottom:0}
+.fix b{color:var(--signal);font-weight:600}
+.fix p{margin:0}
+@media (max-width:700px){.fix{grid-template-columns:1fr;gap:4px}}
+
+.other{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-top:32px}
+.other h3{font-size:20px;margin:0 0 8px}
+.other p{margin:0}
+@media (max-width:640px){.other{grid-template-columns:1fr;gap:10px}}
+
+/* in progress */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:880px){.roadmap{grid-template-columns:1fr}}
+.rm{border-top:4px solid var(--accent)}
+.rm.planned{border-top-color:var(--muted)}
+.rm h3{font-size:19px;margin:10px 0 8px}
+.rm p{margin:0 0 4px}
+.pill{display:inline-block;font-size:13px;font-weight:600;padding:2px 11px;border-radius:999px}
+.pill.go{color:var(--ok);background:color-mix(in srgb,var(--ok) 12%,transparent)}
+.pill.plan{color:var(--muted);background:color-mix(in srgb,var(--muted) 14%,transparent)}
+.pill.done{color:var(--accent);background:var(--accent-soft)}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media (max-width:880px){.skills{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.skills{grid-template-columns:1fr}}
+.skills h3{font-size:17px;margin-bottom:12px}
+.skills ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.skills li{font-size:14px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:var(--bg)}
+
+/* timeline */
+.tl{display:grid;gap:14px}
+.tl .item{display:grid;grid-template-columns:160px 1fr;gap:24px}
+.tl .when{font-size:14.5px;color:var(--muted);padding-top:2px}
+.tl h3{font-size:18px}
+.tl .org{color:var(--accent);font-weight:600;font-size:15px;margin:2px 0 8px}
+.tl p{margin:0}
+@media (max-width:640px){.tl .item{grid-template-columns:1fr;gap:4px}}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+
+<nav aria-label="Navigation principale">
+  <div class="wrap">
+    <a class="brand" href="#top">Yassine</a>
+    <ul>
+      <li><a href="#projet">Projet principal</a></li>
+      <li><a href="#en-cours">En cours</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#parcours">Parcours</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Yassine <span>Technicien systèmes &amp; réseaux</span></h1>
+    <p class="lede">Je conçois, déploie et documente des infrastructures réseau complètes : segmentation VLAN, annuaire Active Directory, supervision, gestion de parc et automatisation. Mon objectif : évoluer vers un poste d'administrateur réseau.</p>
+    <a class="btn" href="#projet">Voir le projet d'infrastructure</a>
+    <div class="facts" role="list">
+      <div class="fact" role="listitem"><b>~1 an</b><span>d'expérience terrain en informatique</span></div>
+      <div class="fact" role="listitem"><b>3 VM · 2 VLAN</b><span>infrastructure construite de A à Z</span></div>
+      <div class="fact" role="listitem"><b>3 outils</b><span>AD, GLPI et Zabbix reliés par script</span></div>
+      <div class="fact" role="listitem"><b>CCNA</b><span>formation Cisco en cours</span></div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section id="projet">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Projet principal : infrastructure d'entreprise virtualisée</h2>
+      <p>Réalisé dans le cadre de la formation BTS SIO option SISR. Une maquette d'infrastructure de PME montée sur du matériel physique, du câblage jusqu'à la création automatique des tickets d'incident.</p>
+    </div>
+
+    <div class="project-top">
+      <div>
+        <h3>Un système d'information complet sur deux postes physiques</h3>
+        <p>J'ai déployé un hyperviseur Proxmox VE sur un Lenovo ThinkCentre M73 (passé à 16 Go de RAM), relié à un routeur TP-Link ER605 et à un switch manageable. Trois machines virtuelles réparties sur deux VLAN reproduisent un réseau d'entreprise : un serveur Linux de services, un contrôleur de domaine Windows et un poste client.</p>
+        <p>Les trois briques d'administration (annuaire, gestion de parc, supervision) sont reliées entre elles : une alerte Zabbix ouvre un ticket GLPI, et un seul script PowerShell crée un utilisateur partout à la fois.</p>
+        <div class="chips">
+          <span class="chip">Proxmox VE</span><span class="chip">VLAN</span><span class="chip">Windows Server 2022</span><span class="chip">Debian 13</span><span class="chip">GLPI 10</span><span class="chip">Zabbix 7.0</span><span class="chip">PowerShell</span><span class="chip">API REST</span>
+        </div>
+      </div>
+
+      <figure class="card topo">
+        <p class="label">Schéma du réseau</p>
+        <svg viewBox="0 0 520 380" role="img" aria-label="Topologie : Internet, routeur ER605, switch, hyperviseur Proxmox avec trois VM sur VLAN 106 et VLAN 11, et un poste Ubuntu avec VMware">
+          <path class="wire" d="M260 52 V78"/>
+          <path class="wire" d="M260 122 V150"/>
+          <path class="wire v106" d="M244 194 V222 H140 V240"/>
+          <path class="wire v11" d="M252 194 V230 H148 V240"/>
+          <path class="wire" d="M300 194 V240 H390"/>
+          <path class="wire v106" d="M96 298 V312"/>
+          <path class="wire v106" d="M140 298 V312 H186 V318"/>
+          <path class="wire v11" d="M180 298 V306 H290 V318"/>
+          <rect class="box" x="210" y="16" width="100" height="36" rx="18"/>
+          <text x="260" y="39" text-anchor="middle" font-size="12.5">Internet</text>
+          <rect class="box hl" x="170" y="78" width="180" height="44" rx="10"/>
+          <text x="260" y="97" text-anchor="middle" font-size="12.5" font-weight="600">TP-Link ER605 V2</text>
+          <text x="260" y="113" text-anchor="middle" font-size="11" class="sub">routage inter-VLAN</text>
+          <rect class="box hl" x="170" y="150" width="180" height="44" rx="10"/>
+          <text x="260" y="169" text-anchor="middle" font-size="12.5" font-weight="600">Switch manageable</text>
+          <text x="260" y="185" text-anchor="middle" font-size="11" class="sub">VLAN 11 et 106</text>
+          <rect class="box" x="30" y="240" width="220" height="58" rx="10"/>
+          <text x="140" y="262" text-anchor="middle" font-size="12.5" font-weight="600">Proxmox VE · ThinkCentre</text>
+          <text x="140" y="280" text-anchor="middle" font-size="11" class="sub">hyperviseur</text>
+          <rect class="box" x="330" y="240" width="160" height="58" rx="10"/>
+          <text x="410" y="262" text-anchor="middle" font-size="12.5" font-weight="600">Ubuntu 24.04</text>
+          <text x="410" y="280" text-anchor="middle" font-size="11" class="sub">VMware · accès distant</text>
+          <rect class="box" x="20" y="318" width="120" height="50" rx="8"/>
+          <text x="80" y="338" text-anchor="middle" font-size="11.5" font-weight="600">Debian 13</text>
+          <text x="80" y="355" text-anchor="middle" font-size="10.5" class="sub">GLPI · Zabbix</text>
+          <rect class="box" x="148" y="318" width="120" height="50" rx="8"/>
+          <text x="208" y="338" text-anchor="middle" font-size="11.5" font-weight="600">Win Server 2022</text>
+          <text x="208" y="355" text-anchor="middle" font-size="10.5" class="sub">AD · DNS · DHCP</text>
+          <rect class="box" x="276" y="318" width="110" height="50" rx="8"/>
+          <text x="331" y="338" text-anchor="middle" font-size="11.5" font-weight="600">Windows 10</text>
+          <text x="331" y="355" text-anchor="middle" font-size="10.5" class="sub">poste client</text>
+        </svg>
+        <div class="legend"><span><i style="background:var(--accent)"></i>VLAN 106 · serveurs</span><span><i style="background:var(--signal)"></i>VLAN 11 · clients</span></div>
+      </figure>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <caption>Plan d'adressage</caption>
+        <thead><tr><th>Machine</th><th>VLAN</th><th>Adresse IP</th><th>Rôle</th></tr></thead>
+        <tbody>
+          <tr><td>Serveur Debian 13</td><td><span class="vl a">106</span></td><td class="mono">172.16.106.113/24</td><td>Apache, PHP 8.3, MariaDB, GLPI 10, Zabbix 7.0</td></tr>
+          <tr><td>Windows Server 2022</td><td><span class="vl a">106</span></td><td class="mono">172.16.106.250/24</td><td>Active Directory, DNS, DHCP</td></tr>
+          <tr><td>Client Windows 10</td><td><span class="vl b">11</span></td><td class="mono">10.3.11.120/24</td><td>Poste joint au domaine, Wireshark, agent Zabbix</td></tr>
+          <tr><td>Passerelles</td><td><span class="vl a">106</span> <span class="vl b">11</span></td><td class="mono">.254 sur chaque VLAN</td><td>Interfaces LAN du routeur ER605</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid3">
+      <div class="card">
+        <h4>Annuaire et gestion de parc</h4>
+        <ul>
+          <li>Domaine Active Directory avec DNS et DHCP</li>
+          <li>GLPI synchronisé avec l'Active Directory (LDAP) via un compte de service dédié</li>
+          <li>Import des utilisateurs de l'annuaire</li>
+          <li>GLPI en HTTPS avec redirection automatique</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Supervision</h4>
+        <ul>
+          <li>Zabbix 7.0 sur base MariaDB</li>
+          <li>Agents Zabbix déployés sur tous les hôtes</li>
+          <li>Chaque alerte Zabbix crée automatiquement un ticket d'incident dans GLPI</li>
+          <li>Analyse de trafic avec Wireshark</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Automatisation</h4>
+        <ul>
+          <li>Un script PowerShell crée un utilisateur en une seule commande</li>
+          <li>Création simultanée dans l'Active Directory, GLPI et Zabbix via leurs API</li>
+          <li>Documentation technique complète de GLPI et de Zabbix</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card fixes">
+      <p class="label">Problèmes rencontrés et résolus</p>
+      <div class="fix"><b>VLAN entre les VM</b><p>Les machines ne communiquaient pas d'un VLAN à l'autre. J'ai activé la gestion des VLAN sur le pont réseau de Proxmox et configuré les ports du switch en conséquence.</p></div>
+      <div class="fix"><b>VMware sous Linux</b><p>VMware n'était pas compatible avec le noyau installé. Je suis revenu à une version antérieure du noyau, puis j'ai déplacé le poste client sur Proxmox pour fiabiliser les VLAN.</p></div>
+      <div class="fix"><b>Installation de GLPI</b><p>La version de PHP n'était pas supportée. J'ai installé PHP 8.3, corrigé la configuration d'Apache et sécurisé les cookies de session.</p></div>
+      <div class="fix"><b>Scripts et HTTPS</b><p>PowerShell refusait les certificats auto-signés de mes serveurs. J'ai adapté le script pour qu'il puisse appeler les API en HTTPS.</p></div>
+    </div>
+
+    <div class="card other">
+      <span class="pill done">Terminé · 2025</span>
+      <div>
+        <h3>Autre projet : postes informatiques pour l'aide aux devoirs</h3>
+        <p>Pour le centre social AAGESC, j'ai installé et préparé des postes informatiques mis à disposition des jeunes pendant l'aide aux devoirs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="en-cours">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Projets en cours</h2>
+      <p>Ce sur quoi je travaille en ce moment pour progresser vers l'administration réseau.</p>
+    </div>
+    <div class="roadmap">
+      <div class="card rm">
+        <span class="pill go">En cours</span>
+        <h3>Formation CCNA</h3>
+        <p>Je suis le parcours CCNA de la Cisco Networking Academy pour approfondir les fondamentaux des réseaux, la commutation, le routage et la sécurité.</p>
+      </div>
+      <div class="card rm">
+        <span class="pill go">En cours</span>
+        <h3>Labs réseau sous GNS3</h3>
+        <p>Je construis des topologies réseau sur GNS3 pour mettre en pratique ce que j'apprends : configuration de routeurs et de switchs, VLAN, routage et services réseau.</p>
+      </div>
+      <div class="card rm planned">
+        <span class="pill plan">Planifié</span>
+        <h3>Serveur de lab personnel</h3>
+        <p>Transformer un ancien portable en serveur Debian administré à distance, pour héberger un DNS filtrant, un VPN, de la supervision et un partage de fichiers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="competences">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Compétences techniques</h2>
+    </div>
+    <div class="skills">
+      <div class="card"><h3>Réseau</h3><ul><li>VLAN</li><li>Routage inter-VLAN</li><li>Adressage IP</li><li>DHCP</li><li>DNS</li><li>NAT</li></ul></div>
+      <div class="card"><h3>Systèmes</h3><ul><li>Windows Server 2022</li><li>Active Directory</li><li>Debian</li><li>Ubuntu</li><li>Apache</li><li>MariaDB</li></ul></div>
+      <div class="card"><h3>Virtualisation</h3><ul><li>Proxmox VE</li><li>VMware Workstation</li><li>GNS3</li></ul></div>
+      <div class="card"><h3>Supervision et gestion de parc</h3><ul><li>Zabbix</li><li>GLPI</li><li>LDAP</li></ul></div>
+      <div class="card"><h3>Automatisation</h3><ul><li>PowerShell</li><li>API REST</li><li>Bash</li></ul></div>
+      <div class="card"><h3>Outils</h3><ul><li>Wireshark</li><li>SSH</li><li>Accès à distance</li><li>Documentation technique</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="parcours">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Parcours</h2>
+    </div>
+    <div class="tl">
+      <div class="card item">
+        <div class="when">2026 · 6 mois</div>
+        <div><h3>Technicien informatique itinérant</h3><div class="org">Euro Information Services · Salon-de-Provence</div><p>Interventions techniques sur site auprès des utilisateurs.</p></div>
+      </div>
+      <div class="card item">
+        <div class="when">Stage · 3 mois</div>
+        <div><h3>Stagiaire technicien informatique</h3><div class="org">Devisubox · Marseille</div><p>Première expérience au sein d'un service informatique en entreprise.</p></div>
+      </div>
+      <div class="card item">
+        <div class="when">2023 – 2025</div>
+        <div><h3>BTS SIO option SISR</h3><div class="org">Lycée Victor Hugo · Marseille</div><p>Solutions d'infrastructure, systèmes et réseaux : administration système, réseaux, cybersécurité et virtualisation.</p></div>
+      </div>
+      <div class="card item">
+        <div class="when">Depuis 2021</div>
+        <div><h3>Responsable animateur</h3><div class="org">AAGESC · Salon-de-Provence</div><p>Encadrement d'équipes et de jeunes, organisation d'activités. Un poste qui m'a appris la rigueur, la communication et la gestion des imprévus.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">Yassine · Technicien systèmes &amp; réseaux</div>
+</footer>
+
+</body>
+</html>
